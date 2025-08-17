@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Patients List</h2>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for patient in patients %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                {% if patient.profile_picture %}
+                    <img src="{{ patient.profile_picture.url }}" class="card-img-top" alt="{{ patient.user.username }}">
+                {% else %}
+                    <img src="{% static 'images/default-profile.png' %}" class="card-img-top" alt="Default Profile">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ patient.user.username }}</h5>
+                    <p class="card-text">Blood Group: {{ patient.blood_group }}</p>
+                    <a href="{% url 'patientDetail' patient.id %}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <p>No patients found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

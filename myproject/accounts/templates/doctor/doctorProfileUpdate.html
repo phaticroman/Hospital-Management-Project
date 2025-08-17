@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Update Your Profile</h2>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} p-2">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-sm p-4">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Profile Picture -->
+            <div class="mb-3">
+                <label class="form-label">Profile Picture</label>
+                {% if doctor.profile_picture %}
+                    <div class="mb-2">
+                        <img src="{{ doctor.profile_picture.url }}" alt="Profile" class="img-thumbnail" style="max-width: 150px;">
+                    </div>
+                {% endif %}
+                <input type="file" name="profile_picture" class="form-control">
+            </div>
+
+            <!-- Contact Number -->
+            <div class="mb-3">
+                <label class="form-label">Contact Number</label>
+                <input type="text" name="contact_number" value="{{ doctor.contact_number }}" class="form-control">
+            </div>
+
+            <!-- Department -->
+            <div class="mb-3">
+                <label class="form-label">Department</label>
+                <input type="text" name="department" value="{{ doctor.department }}" class="form-control">
+            </div>
+
+            <!-- Specialization -->
+            <div class="mb-3">
+                <label class="form-label">Specialization</label>
+                <input type="text" name="specialization" value="{{ doctor.specialization }}" class="form-control">
+            </div>
+
+            <!-- Qualification -->
+            <div class="mb-3">
+                <label class="form-label">Qualification</label>
+                <input type="text" name="qualification" value="{{ doctor.qualification }}" class="form-control">
+            </div>
+
+            <!-- Experience -->
+            <div class="mb-3">
+                <label class="form-label">Experience (Years)</label>
+                <input type="number" name="experience" value="{{ doctor.experience }}" class="form-control" min="0">
+            </div>
+
+            <!-- Consultation Fee -->
+            <div class="mb-3">
+                <label class="form-label">Consultation Fee</label>
+                <input type="number" name="consultation_fee" value="{{ doctor.consultation_fee }}" class="form-control" min="0">
+            </div>
+
+            <!-- Availability Status -->
+            <div class="form-check mb-3">
+                <input type="checkbox" name="availability_status" class="form-check-input" id="availability"
+                       {% if doctor.availability_status %}checked{% endif %}>
+                <label class="form-check-label" for="availability">Available for Consultation</label>
+            </div>
+
+            <button type="submit" class="btn btn-success mt-3">Update Profile</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

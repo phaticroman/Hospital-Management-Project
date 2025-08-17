@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+    <div class="card mb-4 shadow-sm">
+        <div class="row g-0">
+            <div class="col-md-4">
+                {% if patient.profile_picture %}
+                    <img src="{{ patient.profile_picture.url }}" class="img-fluid rounded-start" alt="{{ patient.user.username }}">
+                {% else %}
+                    <img src="{% static 'images/default-profile.png' %}" class="img-fluid rounded-start" alt="Default Profile">
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h3 class="card-title">{{ patient.user.username }}</h3>
+                    <p class="card-text"><strong>Gender:</strong> {{ patient.gender }}</p>
+                    <p class="card-text"><strong>Date of Birth:</strong> {{ patient.date_of_birth }}</p>
+                    <p class="card-text"><strong>Contact:</strong> {{ patient.contact_number }}</p>
+                    <p class="card-text"><strong>Address:</strong> {{ patient.address }}</p>
+                    <p class="card-text"><strong>Blood Group:</strong> {{ patient.blood_group }}</p>
+                    <p class="card-text"><strong>Allergies:</strong> {{ patient.allergies }}</p>
+                    <p class="card-text"><strong>Emergency Contact:</strong> {{ patient.emergency_contact_number }}</p>
+                    <p class="card-text"><strong>Assigned Doctor:</strong> {{ patient.doctor_assigned.user.username if patient.doctor_assigned }}</p>
+                    <p class="card-text"><strong>Status:</strong> {{ patient.status }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

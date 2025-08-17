@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+    <div class="card mb-4 shadow-sm">
+        <div class="row g-0">
+            <div class="col-md-4">
+                {% if doctor.profile_picture %}
+                    <img src="{{ doctor.profile_picture.url }}" class="img-fluid rounded-start" alt="{{ doctor.user.username }}">
+                {% else %}
+                    <img src="" class="img-fluid rounded-start" alt="Default Profile">
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h3 class="card-title">{{ doctor.user.username }}</h3>
+                    <p class="card-text"><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+                    <p class="card-text"><strong>Experience:</strong> {{ doctor.experience }} years</p>
+                    <p class="card-text"><strong>Contact:</strong> {{ doctor.contact_number }}</p>
+                    <p class="card-text"><strong>Address:</strong> {{ doctor.address }}</p>
+                    <p class="card-text"><strong>Bio:</strong> {{ doctor.bio }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

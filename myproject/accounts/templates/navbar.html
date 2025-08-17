@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <!-- Company Name -->
+    <a class="navbar-brand fw-bold" href="{% url 'homePage' %}">Ruby Evolution</a>
+
+    <!-- Toggler for mobile view -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Content -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      
+      <!-- Search Bar (centered) -->
+      <form class="d-flex mx-auto" role="search" method="GET" action="{% url 'doctorList' %}">
+        <input class="form-control me-2" type="search" name="q" placeholder="Search doctors..." aria-label="Search">
+        <button class="btn btn-outline-light" type="submit">Search</button>
+      </form>
+
+      <!-- Links / Dropdown -->
+      <ul class="navbar-nav ms-auto">
+
+        <!-- Doctors Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Doctors
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{% url 'doctorList' %}">All Doctors</a></li>
+            {% if request.user.role == 'doctor' %}
+            <li><a class="dropdown-item" href="{% url 'doctorProfileUpdate' %}">Update Profile</a></li>
+            {% endif %}
+            {% if request.user.role == 'patient' %}
+            <a class="dropdown-item" href="{% url 'patientUpdateView' request.user.patientprofile.pk %}">Update Profile</a>
+            {% endif %}
+          </ul>
+        </li>
+
+        <!-- Logout -->
+        <li class="nav-item ms-2">
+          <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
