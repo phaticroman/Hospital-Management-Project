@@ -34,6 +34,9 @@
             {% if request.user.role == 'patient' %}
             <a class="dropdown-item" href="{% url 'patientUpdateView' request.user.patientprofile.pk %}">Update Profile</a>
             {% endif %}
+            <li><a class="dropdown-item" href="{% url 'appointmentMakeAppointment' %}">Make Appointment</a></li>
+
+            <li><a class="dropdown-item" href="{% url 'MyAppointments' %}">My Appointment</a></li>
           </ul>
         </li>
 
