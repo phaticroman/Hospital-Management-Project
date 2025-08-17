@@ -49,3 +49,21 @@ class MyAppointments(LoginRequiredMixin,View):
             appointments = Appointment.objects.all()
         return render(request,'consultation/myAppointmentList.html',{'appointments':appointments})
     
+
+
+class UpdateAppointmentStatusView(LoginRequiredMixin, View):
+    def get(self, request, pk, status):
+        appointment = Appointment.objects.get(pk=pk)
+
+        if request.user.role != 'doctor' or appointment.doctor.user != request.user:
+            messages.error(request, "You are not authorized to update this appointment.")
+            return redirect('MyAppointments')
+
+        if status not in ['Confirmed', 'Cancelled']:
+            messages.error(request, "Invalid status.")
+            return redirect('MyAppointments')
+
+        appointment.status = status
+        appointment.save()
+        messages.success(request, f"Appointment {status.lower()} successfully.")
+        return redirect('MyAppointments')    
