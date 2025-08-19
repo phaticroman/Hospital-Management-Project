@@ -3,4 +3,4 @@ from .models import *
 
 
 admin.site.register(Appointment)
-admin.site.register(PatientDischarge)
+admin.site.register(PatientDiagnosis)

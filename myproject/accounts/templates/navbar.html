@@ -29,11 +29,11 @@
           <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="{% url 'doctorList' %}">All Doctors</a></li>
             {% if request.user.role == 'doctor' %}
-            <li><a class="dropdown-item" href="{% url 'doctorProfileUpdate' %}">Update Profile</a></li>
+            <li><a class="dropdown-item" href="{% url 'doctorprofile' %}">Profile</a></li>
             {% endif %}
             {% if request.user.role == 'patient' %}
-            <li><a class="dropdown-item" href="{% url 'appointmentMakeAppointment' %}">Make Appointment</a></li>
-            <a class="dropdown-item" href="{% url 'patientUpdateView' request.user.patientprofile.pk %}">Update Profile</a>
+            <li><a class="dropdown-item" href="{% url 'createAppointment' %}">Make Appointment</a></li>
+            <li><a class="dropdown-item" href="{% url 'PatientProfileView' %}">Profile</a></li>
             {% endif %}
             
 

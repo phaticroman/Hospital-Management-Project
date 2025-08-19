@@ -12,11 +12,13 @@ urlpatterns = [
     
     
     path('doctors/', DoctorListView.as_view(), name='doctorList'),
+    path('doctorprofile/', DoctorProfileView.as_view(), name='doctorprofile'),
     path('doctors/<int:pk>/', DoctorDetailView.as_view(), name='doctorDetail'),
     path('doctor/profile/update/', DoctorProfileUpdateView.as_view(), name='doctorProfileUpdate'),
     
     
     path('patientDetails/<int:pk>/', PatientDetailView.as_view(), name='patientDetail'),
+    path('PatientProfileView/', PatientProfileView.as_view(), name='PatientProfileView'),
     path('patientDetails/<int:pk>/update/', PatientUpdateView.as_view(), name='patientUpdateView'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

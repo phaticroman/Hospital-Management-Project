@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">👨‍⚕️ Doctor Profile</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} p-2">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-lg mb-4" style="max-width: 700px; margin:auto;">
+    <div class="row g-0">
+        <div class="col-md-4 text-center p-3">
+            {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}" class="img-fluid rounded-circle" alt="Profile Picture">
+            {% else %}
+                <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle" alt="Profile Picture">
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h4 class="card-title">{{ profile.user.get_full_name }}</h4>
+                <p><strong>Email:</strong> {{ profile.user.email }}</p>
+                <p><strong>Contact:</strong> {{ profile.contact_number|default:"N/A" }}</p>
+                <p><strong>Department:</strong> {{ profile.department }}</p>
+                <p><strong>Specialization:</strong> {{ profile.specialization|default:"N/A" }}</p>
+                <p><strong>Qualification:</strong> {{ profile.qualification|default:"N/A" }}</p>
+                <p><strong>Experience:</strong> {{ profile.experience }} years</p>
+                <p><strong>Consultation Fee:</strong> ${{ profile.consultation_fee }}</p>
+                <p><strong>Availability:</strong> 
+                    {% if profile.availability_status %}
+                        <span class="text-success">Available</span>
+                    {% else %}
+                        <span class="text-danger">Not Available</span>
+                    {% endif %}
+                </p>
+
+                <a href="{% url 'doctorProfileUpdate' %}" class="btn btn-primary mt-3">✏️ Edit Profile</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h3 class="card-title text-center mb-4">📝 Patient Notes</h3>
+
+        <div class="mb-3">
+            <strong>Patient:</strong> {{ patient.patient.user.get_full_name }}
+        </div>
+
+        <div class="mb-3">
+            <strong>Doctor:</strong> {{ patient.doctor.user.get_full_name }}
+        </div>
+
+        <div class="mb-3">
+            <strong>Appointment Date:</strong> {{ patient.appointment_date|date:"Y-m-d H:i" }}
+        </div>
+
+        <div class="mb-3">
+            <strong>Status:</strong> 
+            <span class="badge bg-info">{{ patient.status }}</span>
+        </div>
+
+        <div class="mb-3">
+            <strong>Notes:</strong>
+            <p class="border rounded p-3 bg-light">{{ patient.notes|default:"No notes available" }}</p>
+        </div>
+
+        <div class="text-center mt-4">
+            {% if request.user.role == 'doctor' and patient.status != 'Cancelled' %}
+            <a href="{% url 'PatientDiagnosisCreate' patient.id %}" class="btn btn-primary btn-lg">
+                ➕ Diagnosis
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

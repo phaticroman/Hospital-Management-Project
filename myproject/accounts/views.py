@@ -149,3 +149,15 @@ class PatientUpdateView(View):
         return redirect('homePage')
     
     
+
+class DoctorProfileView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.role == 'doctor':
+            profile = get_object_or_404(DoctorProfile, user=request.user)
+        return render(request,'doctor/doctorProfile.html',{'profile':profile})
+    
+class PatientProfileView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.role == 'patient':
+            profile = get_object_or_404(PatientProfile, user=request.user)
+        return render(request,'patient/patientProfile.html',{'profile':profile})

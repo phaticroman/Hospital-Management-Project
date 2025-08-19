@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4" style="max-width: 700px; margin:auto;">
+        <h3 class="card-title text-center mb-4">🩺 Patient Diagnosis Details</h3>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} p-2">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="mb-3"><strong>Patient:</strong> {{ diagnosis.appointment.patient.user.get_full_name }}</div>
+        <div class="mb-3"><strong>Doctor:</strong> {{ diagnosis.doctor.user.get_full_name }}</div>
+        <div class="mb-3"><strong>Appointment Date:</strong> {{ diagnosis.appointment.appointment_date|date:"Y-m-d H:i" }}</div>
+
+        <div class="mb-3">
+            <strong>Diagnosis:</strong>
+            <p class="border rounded p-3 bg-light">{{ diagnosis.diagnosis|default:"No diagnosis provided." }}</p>
+        </div>
+
+        <div class="mb-3">
+            <strong>Treatment Summary:</strong>
+            <p class="border rounded p-3 bg-light">{{ diagnosis.treatment_summary|default:"No treatment summary provided." }}</p>
+        </div>
+
+        <div class="mb-3">
+            <strong>Medicines Prescribed:</strong>
+            <p class="border rounded p-3 bg-light">{{ diagnosis.medicines_prescribed|default:"No medicines prescribed." }}</p>
+        </div>
+
+        <div class="mb-3">
+            <strong>Follow-up Date:</strong>
+            <p class="border rounded p-3 bg-light">{{ diagnosis.follow_up_date|date:"Y-m-d"|default:"N/A" }}</p>
+        </div>
+
+        <div class="mb-3">
+            <strong>Additional Notes:</strong>
+            <p class="border rounded p-3 bg-light">{{ diagnosis.notes|default:"No additional notes." }}</p>
+        </div>
+
+        {% if request.user.role == "doctor" %}
+        <div class="text-center mt-4">
+            <a href="#" class="btn btn-primary">✏️ Edit Diagnosis</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

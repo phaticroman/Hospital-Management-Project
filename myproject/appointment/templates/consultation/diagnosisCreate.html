@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4" style="max-width: 700px; margin:auto;">
+        <h3 class="card-title text-center mb-4">🩺 Add Diagnosis for Appointment</h3>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} p-2">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="mb-3">
+            <strong>Patient:</strong> {{ appointment.patient.user.get_full_name }}
+        </div>
+        <div class="mb-3">
+            <strong>Doctor:</strong> {{ appointment.doctor.user.get_full_name }}
+        </div>
+        <div class="mb-3">
+            <strong>Appointment Date:</strong> {{ appointment.appointment_date|date:"Y-m-d H:i" }}
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {% if appointment.diagnosis %}
+                {% with diag=appointment.diagnosis %}
+                    <!-- Diagnosis -->
+                    <div class="mb-3">
+                        <label class="form-label">Diagnosis <span class="text-danger">*</span></label>
+                        <textarea name="diagnosis" class="form-control" rows="3" placeholder="Enter diagnosis..." required>{{ diag.diagnosis }}</textarea>
+                    </div>
+
+                    <!-- Treatment Summary -->
+                    <div class="mb-3">
+                        <label class="form-label">Treatment Summary</label>
+                        <textarea name="treatment_summary" class="form-control" rows="3" placeholder="Treatment details...">{{ diag.treatment_summary }}</textarea>
+                    </div>
+
+                    <!-- Medicines Prescribed -->
+                    <div class="mb-3">
+                        <label class="form-label">Medicines Prescribed</label>
+                        <textarea name="medicines_prescribed" class="form-control" rows="2" placeholder="Medicines...">{{ diag.medicines_prescribed }}</textarea>
+                    </div>
+
+                    <!-- Follow-up Date -->
+                    <div class="mb-3">
+                        <label class="form-label">Follow-up Date</label>
+                        <input type="date" name="follow_up_date" class="form-control" value="{{ diag.follow_up_date|date:'Y-m-d' }}">
+                    </div>
+
+                    <!-- Additional Notes -->
+                    <div class="mb-3">
+                        <label class="form-label">Additional Notes</label>
+                        <textarea name="notes" class="form-control" rows="2" placeholder="Any extra notes...">{{ diag.notes }}</textarea>
+                    </div>
+                {% endwith %}
+            {% else %}
+                <!-- Empty form fields if no existing diagnosis -->
+                <div class="mb-3">
+                    <label class="form-label">Diagnosis <span class="text-danger">*</span></label>
+                    <textarea name="diagnosis" class="form-control" rows="3" placeholder="Enter diagnosis..." required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Treatment Summary</label>
+                    <textarea name="treatment_summary" class="form-control" rows="3" placeholder="Treatment details..."></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Medicines Prescribed</label>
+                    <textarea name="medicines_prescribed" class="form-control" rows="2" placeholder="Medicines..."></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Follow-up Date</label>
+                    <input type="date" name="follow_up_date" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Additional Notes</label>
+                    <textarea name="notes" class="form-control" rows="2" placeholder="Any extra notes..."></textarea>
+                </div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-success mt-3 w-100">Save Diagnosis</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -4,7 +4,7 @@ from django.contrib.auth.views import LoginView
 from django.views import View
 from django.contrib import messages
 from accounts.models import DoctorProfile,PatientProfile
-from .models import Appointment
+from .models import Appointment,PatientDiagnosis
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -25,8 +25,12 @@ class MakeAppointmentView(LoginRequiredMixin,View):
 
         if not doctor_id or not appointment_date:
             messages.error(request, "Doctor and appointment date are required.")
-            return redirect('createAppointment')
+            return redirect('MyAppointments')
         doctor = get_object_or_404(DoctorProfile, pk=doctor_id)
+        
+        if Appointment.objects.filter(patient=patient,doctor=doctor, status__in=['Pending', 'Confirmed']).first():
+            messages.error(request, "You already have a pending appointment.")
+            return redirect('MyAppointments')
         Appointment.objects.create(
             patient=patient,
             doctor=doctor,
@@ -37,17 +41,17 @@ class MakeAppointmentView(LoginRequiredMixin,View):
         return redirect('MyAppointments')
 
 
-class MyAppointments(LoginRequiredMixin,View):
-    def get(self,request):
+class MyAppointments(LoginRequiredMixin, View):
+    def get(self, request):
         if request.user.role == 'patient':
             patient = PatientProfile.objects.get(user=request.user)
-            appointments = Appointment.objects.filter(patient=patient)
+            appointments = Appointment.objects.filter(patient=patient).select_related('diagnosis')
         elif request.user.role == 'doctor':
             doctor = DoctorProfile.objects.get(user=request.user)
-            appointments = Appointment.objects.filter(doctor=doctor)
+            appointments = Appointment.objects.filter(doctor=doctor).select_related('diagnosis')
         else:
-            appointments = Appointment.objects.all()
-        return render(request,'consultation/myAppointmentList.html',{'appointments':appointments})
+            appointments = Appointment.objects.all().select_related('diagnosis')
+        return render(request, 'consultation/myAppointmentList.html', {'appointments': appointments})
     
 
 
@@ -67,3 +71,62 @@ class UpdateAppointmentStatusView(LoginRequiredMixin, View):
         appointment.save()
         messages.success(request, f"Appointment {status.lower()} successfully.")
         return redirect('MyAppointments')    
+    
+    
+class patientNoteDetail(DetailView):
+    model = Appointment
+    template_name='consultation/patientNote.html'
+    context_object_name = 'patient'
+    
+
+class PatientDiagnosisCreateView(View):
+    def get(self, request, appointment_id):
+        if request.user.role != "doctor":
+            messages.error(request, "❌ Only doctors can add diagnosis.")
+            return redirect("MyAppointments")
+
+        appointment = get_object_or_404(Appointment, id=appointment_id)
+        return render(request, "consultation/diagnosisCreate.html", {"appointment": appointment})
+
+    def post(self, request, appointment_id):
+        if request.user.role != "doctor":
+            messages.error(request, "❌ Only doctors can add diagnosis.")
+            return redirect("MyAppointments")
+
+        appointment = get_object_or_404(Appointment, id=appointment_id)
+        doctor = get_object_or_404(DoctorProfile, user=request.user)
+
+        diagnosis_text = request.POST.get("diagnosis")
+        treatment_summary = request.POST.get("treatment_summary")
+        medicines_prescribed = request.POST.get("medicines_prescribed")
+        follow_up_date = request.POST.get("follow_up_date")
+        notes = request.POST.get("notes")
+
+        if not diagnosis_text:
+            messages.error(request, "Diagnosis is required.")
+            return redirect("PatientDiagnosisCreate", appointment_id=appointment_id)
+
+        PatientDiagnosis.objects.update_or_create(
+            appointment=appointment,
+            defaults={
+                "doctor": doctor,
+                "diagnosis": diagnosis_text,
+                "treatment_summary": treatment_summary,
+                "medicines_prescribed": medicines_prescribed,
+                "follow_up_date": follow_up_date or None,
+                "notes": notes,
+            }
+        )
+
+        appointment.status = 'Completed'
+        appointment.save()
+
+        messages.success(request, "✅ Diagnosis record saved successfully.")
+        return redirect("MyAppointments")
+
+class DiagnosisDetail(DetailView):
+    model = PatientDiagnosis
+    template_name='consultation/diagnosisDetails.html'
+    context_object_name = 'diagnosis'
+    
+    

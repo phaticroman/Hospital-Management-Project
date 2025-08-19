@@ -22,17 +22,14 @@ class Appointment(models.Model):
     
     
 
-class PatientDischarge(models.Model):
-    patient = models.OneToOneField(PatientProfile, on_delete=models.CASCADE)
+class PatientDiagnosis(models.Model):
+    appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE,related_name="diagnosis",null=True,blank=True)
     doctor = models.ForeignKey(DoctorProfile, on_delete=models.SET_NULL, null=True, blank=True)
-    admission_date = models.DateField()
-    discharge_date = models.DateField()
     diagnosis = models.TextField(null=True, blank=True)
     treatment_summary = models.TextField(null=True, blank=True)
     medicines_prescribed = models.TextField(null=True, blank=True)
     follow_up_date = models.DateField(null=True, blank=True)
-    total_bill = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     notes = models.TextField(null=True, blank=True)
     
     def __str__(self):
-        return f"Discharge Details - {self.patient.user.get_full_name()}"
+        return f"Diagnosis for {self.appointment.patient.user.get_full_name()}"
