@@ -3,37 +3,57 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="card shadow-lg p-4">
-        <h3 class="card-title text-center mb-4">📝 Patient Notes</h3>
-
-        <div class="mb-3">
-            <strong>Patient:</strong> {{ patient.patient.user.get_full_name }}
+    <div class="card shadow-sm" style="max-width: 700px; margin:auto;">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>📝 Patient Notes</h3>
         </div>
 
-        <div class="mb-3">
-            <strong>Doctor:</strong> {{ patient.doctor.user.get_full_name }}
-        </div>
+        <div class="card-body">
 
-        <div class="mb-3">
-            <strong>Appointment Date:</strong> {{ patient.appointment_date|date:"Y-m-d H:i" }}
-        </div>
+            <!-- Patient Info -->
+            <div class="mb-3">
+                <h5>Patient Information</h5>
+                <p><strong>Name:</strong> {{ patient.patient.user.get_full_name }}</p>
+                <p><strong>Doctor:</strong> {{ patient.doctor.user.get_full_name }}</p>
+                <p><strong>Appointment Date:</strong> {{ patient.appointment_date|date:"Y-m-d H:i" }}</p>
+                <p><strong>Status:</strong> 
+                    <span class="badge 
+                        {% if patient.status == 'Completed' %}bg-success
+                        {% elif patient.status == 'Pending' %}bg-warning text-dark
+                        {% elif patient.status == 'Cancelled' %}bg-danger
+                        {% else %}bg-info{% endif %}">
+                        {{ patient.status }}
+                    </span>
+                </p>
+            </div>
 
-        <div class="mb-3">
-            <strong>Status:</strong> 
-            <span class="badge bg-info">{{ patient.status }}</span>
-        </div>
+            <!-- Notes Section -->
+            <div class="mb-4">
+                <h5>Notes</h5>
+                <div class="p-3 border rounded bg-light">
+                    {{ patient.notes|default:"No notes available" }}
+                </div>
+            </div>
 
-        <div class="mb-3">
-            <strong>Notes:</strong>
-            <p class="border rounded p-3 bg-light">{{ patient.notes|default:"No notes available" }}</p>
-        </div>
+            <!-- Actions -->
+            <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+                {% if request.user.role == 'doctor' and patient.status != 'Cancelled' %}
+                    <a href="{% url 'PatientDiagnosisCreate' patient.id %}" class="btn btn-primary">
+                        ➕ Add Diagnosis
+                    </a>
+                {% endif %}
+                {% if request.user.role == 'staff' %}
+                <a href="{% url 'MakeBill' %}?appointment_id={{ patient.id }}" class="btn btn-secondary">
+                    📋 Make Bill
+                </a>
+                {% endif %}
+                {% if request.user.role == 'doctor' %}
+                <a href="{% url 'PatientDiagnosisList' patient.patient.id %}" class="btn btn-secondary">
+                    📋 View Diagnoses
+                </a>
+                {% endif %}
+            </div>
 
-        <div class="text-center mt-4">
-            {% if request.user.role == 'doctor' and patient.status != 'Cancelled' %}
-            <a href="{% url 'PatientDiagnosisCreate' patient.id %}" class="btn btn-primary btn-lg">
-                ➕ Diagnosis
-            </a>
-            {% endif %}
         </div>
     </div>
 </div>

@@ -33,3 +33,27 @@ class PatientDiagnosis(models.Model):
     
     def __str__(self):
         return f"Diagnosis for {self.appointment.patient.user.get_full_name()}"
+
+
+
+class Billing(models.Model):
+    PAYMENT_STATUS = [
+        ('Paid', 'Paid'),
+        ('Unpaid', 'Unpaid'),
+        ('Pending', 'Pending'),
+    ]
+
+    patient = models.ForeignKey(PatientProfile, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(DoctorProfile, on_delete=models.SET_NULL, null=True, blank=True)
+    appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, null=True, blank=True)
+
+    billDate = models.DateTimeField(auto_now_add=True)
+    consultationFee = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+    medicineCharges = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    testCharges = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    otherCharges = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+
+    totalAmount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    paymentStatus = models.CharField(max_length=20, choices=PAYMENT_STATUS, default='Pending')
+    def __str__(self):
+        return f"Bill - {self.patient.user.get_full_name()} ({self.paymentStatus})"

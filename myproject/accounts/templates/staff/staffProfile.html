@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">🧑‍💼 Staff Profile</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} p-2">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-lg" style="max-width: 700px; margin:auto;">
+        <div class="row g-0">
+            <!-- Profile Picture -->
+            <div class="col-md-4 text-center p-3">
+                {% if profile.profile_picture %}
+                    <img src="{{ profile.profile_picture.url }}" class="img-fluid rounded-circle" alt="Profile Picture">
+                {% else %}
+                    <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle" alt="Profile Picture">
+                {% endif %}
+            </div>
+
+            <!-- Profile Details -->
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h4 class="card-title">{{ profile.user.get_full_name }}</h4>
+                    <p><strong>Email:</strong> {{ profile.user.email }}</p>
+                    <p><strong>Role:</strong> {{ profile.role }}</p>
+                    <p><strong>Contact Number:</strong> {{ profile.contactNumber|default:"N/A" }}</p>
+                    <p><strong>Address:</strong> {{ profile.address|default:"N/A" }}</p>
+                    <p><strong>Shift Time:</strong> {{ profile.shiftTime|default:"N/A" }}</p>
+                    <p><strong>Join Date:</strong> {{ profile.joinDate|date:"Y-m-d" }}</p>
+                    <p><strong>Salary:</strong> ৳ {{ profile.salary }}</p>
+
+                    <a href="{% url 'StaffUpdateView' profile.pk %}" class="btn btn-primary mt-3">✏️ Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -5,84 +5,96 @@
     <h2 class="mb-4 text-center">📅 My Appointments</h2>
 
     {% if messages %}
-        <div>
+        <div class="mb-3">
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                <div class="alert alert-{{ message.tags }} p-2">{{ message }}</div>
             {% endfor %}
         </div>
     {% endif %}
 
     {% if appointments %}
-        <table class="table table-striped table-bordered shadow-sm">
-            <thead class="table-dark">
-                <tr>
-                    {% if request.user.role == "patient" %}
-                        <th>Doctor</th>
-                    {% elif request.user.role == "doctor" %}
-                        <th>Patient</th>
-                    {% else %}
-                        <th>Patient</th>
-                        <th>Doctor</th>
-                    {% endif %}
-                    <th>Appointment Date</th>
-                    <th>Status</th>
-                    <th>Notes</th>
-                    {% if request.user.role == "doctor" %}
-                        <th>Actions</th>
-                    {% endif %}
-                    <th>View</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for appointment in appointments %}
+        <div class="table-responsive shadow-sm">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-dark">
                     <tr>
                         {% if request.user.role == "patient" %}
-                            <td>{{ appointment.doctor.user.get_full_name }}</td>
+                            <th>Doctor</th>
                         {% elif request.user.role == "doctor" %}
-                            <td>{{ appointment.patient.user.get_full_name }}</td>
+                            <th>Patient</th>
                         {% else %}
-                            <td>{{ appointment.patient.user.get_full_name }}</td>
-                            <td>{{ appointment.doctor.user.get_full_name }}</td>
+                            <th>Patient</th>
+                            <th>Doctor</th>
                         {% endif %}
-
-                        <td>{{ appointment.appointment_date|date:"Y-m-d H:i" }}</td>
-
-                        <td>
-                            {% if appointment.status == "Pending" %}
-                                <span class="badge bg-warning text-dark">Pending</span>
-                            {% elif appointment.status == "Confirmed" %}
-                                <span class="badge bg-success">Confirmed</span>
-                            {% elif appointment.status == "Completed" %}
-                                <span class="badge bg-primary">Completed</span>
-                            {% elif appointment.status == "Cancelled" %}
-                                <span class="badge bg-danger">Cancelled</span>
-                            {% endif %}
-                        </td>
-
-                        <td>{{ appointment.notes|default:"-" }}</td>
-
+                        <th>Date & Time</th>
+                        <th>Status</th>
+                        <th>Notes</th>
                         {% if request.user.role == "doctor" %}
+                            <th>Actions</th>
+                        {% endif %}
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                        <tr>
+                            {% if request.user.role == "patient" %}
+                                <td>
+                                    <a href="{% url 'doctorDetail' appointment.doctor.id %}" class="text-decoration-none">
+                                        Dr. {{ appointment.doctor.user.get_full_name }}
+                                    </a>
+                                </td>
+                            {% elif request.user.role == "doctor" %}
+                                <td>
+                                    <a href="{% url 'patientDetail' appointment.patient.id %}" class="text-decoration-none">
+                                        {{ appointment.patient.user.get_full_name }}
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td>{{ appointment.patient.user.get_full_name }}</td>
+                                <td>Dr. {{ appointment.doctor.user.get_full_name }}</td>
+                            {% endif %}
+
+                            <td>{{ appointment.appointment_date|date:"Y-m-d H:i" }}</td>
+
                             <td>
                                 {% if appointment.status == "Pending" %}
-                                    <a href="{% url 'updateAppointmentStatus' appointment.id 'Confirmed' %}" class="btn btn-sm btn-success">Accept</a>
-                                    <a href="{% url 'updateAppointmentStatus' appointment.id 'Cancelled' %}" class="btn btn-sm btn-danger">Reject</a>
-                                {% else %}
-                                    -
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                {% elif appointment.status == "Confirmed" %}
+                                    <span class="badge bg-success">Confirmed</span>
+                                {% elif appointment.status == "Completed" %}
+                                    <span class="badge bg-primary">Completed</span>
+                                {% elif appointment.status == "Cancelled" %}
+                                    <span class="badge bg-danger">Cancelled</span>
                                 {% endif %}
                             </td>
-                        {% endif %}
 
-                        <td>
-                            {% if appointment.status == "Completed" and appointment.diagnosis %}
-                                <a href="{% url 'DiagnosisDetail' appointment.diagnosis.id %}">Diagnosis Details</a>
-                            {% else %}
-                                <a href="{% url 'patientNoteDetail' appointment.id %}">Details</a>
+                            <td>{{ appointment.notes|default:"-" }}</td>
+
+                            {% if request.user.role == "doctor" %}
+                                <td>
+                                    {% if appointment.status == "Pending" %}
+                                        <div class="d-flex gap-1">
+                                            <a href="{% url 'updateAppointmentStatus' appointment.id 'Confirmed' %}" class="btn btn-sm btn-success">Accept</a>
+                                            <a href="{% url 'updateAppointmentStatus' appointment.id 'Cancelled' %}" class="btn btn-sm btn-danger">Reject</a>
+                                        </div>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
                             {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+
+                            <td>
+                                {% if appointment.status == "Completed" and appointment.diagnosis %}
+                                    <a href="{% url 'DiagnosisDetail' appointment.diagnosis.id %}" class="btn btn-sm btn-outline-primary">View Diagnosis</a>
+                                {% else %}
+                                    <a href="{% url 'patientNoteDetail' appointment.id %}" class="btn btn-sm btn-outline-secondary">View</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
         <p class="text-center text-muted">No appointments found.</p>
     {% endif %}

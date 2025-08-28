@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container my-5">
-    <h2 class="mb-4">Request an Appointment</h2>
+    <h2 class="text-center mb-4">📅 Request an Appointment</h2>
 
     {% if messages %}
         {% for message in messages %}
@@ -9,34 +9,36 @@
         {% endfor %}
     {% endif %}
 
-    <div class="card shadow-sm p-4" style="max-width: 600px; margin: auto;">
+    <div class="card shadow-sm p-4" style="max-width: 600px; margin:auto;">
         <form method="POST">
             {% csrf_token %}
 
             <!-- Doctor Selection -->
-            <div class="mb-3">
+            <div class="mb-4">
                 <label class="form-label">Select Doctor <span class="text-danger">*</span></label>
                 <select name="doctor" class="form-select" required>
                     <option value="" disabled selected>-- Choose a doctor --</option>
                     {% for doctor in doctors %}
-                        <option value="{{ doctor.id }}">{{ doctor.user.first_name }} {{ doctor.user.last_name }} - {{ doctor.specialization }}</option>
+                        <option value="{{ doctor.id }}">
+                            Dr. {{ doctor.user.first_name }} {{ doctor.user.last_name }} – {{ doctor.specialization }}
+                        </option>
                     {% endfor %}
                 </select>
             </div>
 
-            <!-- Appointment Date -->
-            <div class="mb-3">
+            <!-- Appointment Date & Time -->
+            <div class="mb-4">
                 <label class="form-label">Appointment Date <span class="text-danger">*</span></label>
                 <input type="date" name="appointment_date" class="form-control" required>
             </div>
 
-            <!-- Notes -->
-            <div class="mb-3">
-                <label class="form-label">Notes</label>
-                <textarea name="notes" class="form-control" rows="4" placeholder="Any additional information..."></textarea>
+            <!-- Notes Section -->
+            <div class="mb-4">
+                <label class="form-label">Additional Notes</label>
+                <textarea name="notes" class="form-control" rows="4" placeholder="Any information you'd like the doctor to know..."></textarea>
             </div>
 
-            <button type="submit" class="btn btn-success mt-3 w-100">Request Appointment</button>
+            <button type="submit" class="btn btn-primary w-100">Request Appointment</button>
         </form>
     </div>
 </div>

@@ -1,28 +1,50 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <div class="container my-5">
-    <div class="card mb-4 shadow-sm">
-        <div class="row g-0">
-            <div class="col-md-4">
+
+    <!-- Profile Header -->
+    <div class="card mb-4 shadow-sm p-3">
+        <div class="row g-3 align-items-center">
+            <!-- Profile Picture -->
+            <div class="col-md-3 text-center">
                 {% if doctor.profile_picture %}
-                    <img src="{{ doctor.profile_picture.url }}" class="img-fluid rounded-start" alt="{{ doctor.user.username }}">
+                    <img src="{{ doctor.profile_picture.url }}" class="rounded-circle img-fluid" alt="{{ doctor.user.first_name }}">
                 {% else %}
-                    <img src="" class="img-fluid rounded-start" alt="Default Profile">
+                    <img src="{% static 'images/default_doctor.jpg' %}" class="rounded-circle img-fluid" alt="Default Profile">
                 {% endif %}
             </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h3 class="card-title">{{ doctor.user.username }}</h3>
-                    <p class="card-text"><strong>Specialization:</strong> {{ doctor.specialization }}</p>
-                    <p class="card-text"><strong>Experience:</strong> {{ doctor.experience }} years</p>
-                    <p class="card-text"><strong>Contact:</strong> {{ doctor.contact_number }}</p>
-                    
-                    <p class="card-text"><strong>Department:</strong> {{ doctor.department }}</p>
-                    <p class="card-text"><strong>Qualification:</strong> {{ doctor.qualification }}</p>
-                    <p class="card-text"><strong>Fee:</strong> {{ doctor.consultation_fee }}</p>
-                </div>
+
+            <!-- Name and Department -->
+            <div class="col-md-9">
+                <h2 class="mb-1">{{ doctor.user.first_name }} {{ doctor.user.last_name }}</h2>
+                <p class="mb-1"><strong>Department:</strong> {{ doctor.department }}</p>
+                {% if doctor.specialization %}
+                    <p class="mb-1"><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+                {% endif %}
+                {% if doctor.availability_status %}
+                    <span class="badge bg-success">Available</span>
+                {% else %}
+                    <span class="badge bg-danger">Not Available</span>
+                {% endif %}
             </div>
         </div>
     </div>
+
+    <!-- Doctor Info -->
+    <div class="card shadow-sm p-3 mb-4">
+        {% if doctor.qualification %}
+            <p><strong>Qualification:</strong> {{ doctor.qualification }}</p>
+        {% endif %}
+        <p><strong>Experience:</strong> {{ doctor.experience }} years</p>
+        <p><strong>Consultation Fee:</strong> ${{ doctor.consultation_fee }}</p>
+        {% if doctor.contact_number %}
+            <p><strong>Contact:</strong> {{ doctor.contact_number }}</p>
+        {% endif %}
+        {% if doctor.bio %}
+            <p><strong>About:</strong> {{ doctor.bio }}</p>
+        {% endif %}
+    </div>
+
 </div>
 {% endblock %}

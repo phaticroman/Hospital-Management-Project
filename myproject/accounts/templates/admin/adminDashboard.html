@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4 text-center">Admin Dashboard</h2>
+
+    <!-- Quick Stats -->
+    <div class="row text-center mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 rounded-3 bg-light">
+                <h5>Total Doctors</h5>
+                <h3>{{ total_doctors }}</h3>
+                <a href="#" class="btn btn-sm btn-primary mt-2">Manage</a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 rounded-3 bg-light">
+                <h5>Total Patients</h5>
+                <h3>{{ total_patients }}</h3>
+                <a href="#" class="btn btn-sm btn-primary mt-2">Manage</a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 rounded-3 bg-light">
+                <h5>Total Staff</h5>
+                <h3>{{ total_staff }}</h3>
+                <a href="#" class="btn btn-sm btn-primary mt-2">Manage</a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 rounded-3 bg-light">
+                <h5>Appointments</h5>
+                <h3>{{ total_appointments }}</h3>
+                <a href="#" class="btn btn-sm btn-primary mt-2">View</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Users Section -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm p-3 rounded-3">
+                <h5>Pending Users</h5>
+                <table class="table table-sm table-bordered mt-3">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in panding_users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.role }}</td>
+                            <td>
+                                <span class="badge bg-warning">{{ user.current_status }}</span>
+                            </td>
+                            <td>
+                                <a href="{% url 'UpdateAppointmentStatusView' user.id 'apporved' %}" 
+                                   class="btn btn-success btn-sm">Approve</a>
+                                <a href="{% url 'UpdateAppointmentStatusView' user.id 'cancel' %}" 
+                                   class="btn btn-danger btn-sm">Cancel</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-center">No pending users</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointments Overview -->
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3 rounded-3">
+                <h5>Recent Appointments</h5>
+                <table class="table table-sm table-bordered mt-3">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appt in recent_appointments %}
+                        <tr>
+                            <td>{{ appt.patient.user.get_full_name }}</td>
+                            <td>{{ appt.doctor.user.get_full_name }}</td>
+                            <td>{{ appt.appointment_date|date:"Y-m-d H:i" }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if appt.status == 'Confirmed' %} bg-success 
+                                    {% elif appt.status == 'Pending' %} bg-warning 
+                                    {% elif appt.status == 'Cancelled' %} bg-danger 
+                                    {% else %} bg-secondary {% endif %}">
+                                    {{ appt.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-center">No appointments found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a href="#" class="btn btn-outline-primary btn-sm">View All</a>
+            </div>
+        </div>
+
+        <!-- Billing Overview -->
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3 rounded-3">
+                <h5>Recent Bills</h5>
+                <table class="table table-sm table-bordered mt-3">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Patient</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bill in recent_bills %}
+                        <tr>
+                            <td>{{ bill.patient.user.get_full_name }}</td>
+                            <td>{{ bill.totalAmount }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if bill.paymentStatus == 'Paid' %} bg-success 
+                                    {% elif bill.paymentStatus == 'Pending' %} bg-warning 
+                                    {% else %} bg-danger {% endif %}">
+                                    {{ bill.paymentStatus }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-center">No bills available</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a href="#" class="btn btn-outline-primary btn-sm">View All</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

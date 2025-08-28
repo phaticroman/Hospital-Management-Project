@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center text-primary mb-4">🧾 Bill Details</h2>
+
+        <div class="mb-3">
+            <strong>Patient:</strong> {{ object.patient.user.get_full_name }}
+        </div>
+
+        <div class="mb-3">
+            <strong>Doctor:</strong> {{ object.doctor.user.get_full_name }}
+        </div>
+
+        <div class="mb-3">
+            <strong>Appointment:</strong> {{ object.appointment }}
+        </div>
+
+        <div class="mb-3">
+            <strong>Bill Date:</strong> {{ object.billDate|date:"d M Y, H:i" }}
+        </div>
+
+        <hr>
+
+        <h5 class="mb-3">💰 Charges</h5>
+        <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Consultation Fee</span>
+                <span>৳ {{ object.consultationFee }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Medicine Charges</span>
+                <span>৳ {{ object.medicineCharges }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Test Charges</span>
+                <span>৳ {{ object.testCharges }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Other Charges</span>
+                <span>৳ {{ object.otherCharges }}</span>
+            </li>
+        </ul>
+
+        <div class="d-flex justify-content-between fw-bold fs-5">
+            <span>Total Amount</span>
+            <span>৳ {{ object.totalAmount }}</span>
+        </div>
+
+        <hr>
+
+        <div class="alert 
+            {% if object.paymentStatus == 'Paid' %} alert-success 
+            {% elif object.paymentStatus == 'Pending' %} alert-warning 
+            {% else %} alert-danger {% endif %}">
+            <strong>Payment Status:</strong> {{ object.paymentStatus }}
+        </div>
+
+        <div class="text-center">
+            <a href="{% url 'AppointmentListView' %}" class="btn btn-secondary">⬅ Back to Appointments</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

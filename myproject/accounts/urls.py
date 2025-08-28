@@ -19,6 +19,13 @@ urlpatterns = [
     
     path('patientDetails/<int:pk>/', PatientDetailView.as_view(), name='patientDetail'),
     path('PatientProfileView/', PatientProfileView.as_view(), name='PatientProfileView'),
-    path('patientDetails/<int:pk>/update/', PatientUpdateView.as_view(), name='patientUpdateView'),
+    path('patientDetail/<int:pk>/update/', PatientUpdateView.as_view(), name='patientUpdateView'),
+    
+    path('StaffUpdateView/<int:pk>/', StaffUpdateView.as_view(), name='StaffUpdateView'),
+    path('StaffProfileView/', StaffProfileView.as_view(), name='StaffProfileView'),
+    
+    
+    path('adminDashboard/', adminDashboard.as_view(), name='adminDashboard'),
+    path('UpdateAppointmentStatusView/<int:pk>/status/<str:current_status>/', UpdateAppointmentStatusView.as_view(), name='UpdateAppointmentStatusView'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

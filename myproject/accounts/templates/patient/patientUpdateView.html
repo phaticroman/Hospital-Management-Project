@@ -1,30 +1,31 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container my-5">
-    <h2 class="mb-4">Update Patient Profile</h2>
+    <h2 class="mb-4 text-center">Update Patient Profile</h2>
 
+    <!-- Messages -->
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }} p-2">{{ message }}</div>
         {% endfor %}
     {% endif %}
 
-    <div class="card shadow-sm p-4">
+    <div class="card shadow-sm p-4" style="max-width: 700px; margin:auto;">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
             <!-- Profile Picture -->
-            <div class="mb-3">
-                <label class="form-label">Profile Picture</label>
+            <div class="mb-4 text-center">
                 {% if patient.profile_picture %}
-                    <div class="mb-2">
-                        <img src="{{ patient.profile_picture.url }}" alt="Profile" class="img-thumbnail" style="max-width: 150px;">
-                    </div>
+                    <img src="{{ patient.profile_picture.url }}" alt="Profile" class="img-thumbnail mb-2" style="width:150px; height:150px; object-fit:cover;">
+                {% else %}
+                    <img src="https://via.placeholder.com/150" alt="Profile" class="img-thumbnail mb-2">
                 {% endif %}
-                <input type="file" name="profile_picture" class="form-control">
+                <input type="file" name="profile_picture" class="form-control mt-2">
             </div>
 
-            <!-- Gender -->
+            <!-- Personal Info Section -->
+            <h5 class="mb-3">Personal Information</h5>
             <div class="mb-3">
                 <label class="form-label">Gender</label>
                 <select name="gender" class="form-select">
@@ -33,61 +34,50 @@
                     <option value="Other" {% if patient.gender == 'Other' %}selected{% endif %}>Other</option>
                 </select>
             </div>
-
-            <!-- Date of Birth -->
             <div class="mb-3">
                 <label class="form-label">Date of Birth</label>
                 <input type="date" name="date_of_birth" value="{{ patient.date_of_birth }}" class="form-control">
             </div>
-
-            <!-- Contact Number -->
             <div class="mb-3">
                 <label class="form-label">Contact Number</label>
                 <input type="text" name="contact_number" value="{{ patient.contact_number }}" class="form-control">
             </div>
-
-            <!-- Address -->
             <div class="mb-3">
                 <label class="form-label">Address</label>
-                <input type="text" name="address" value="{{ patient.address }}" class="form-control">
+                <textarea name="address" class="form-control" rows="2">{{ patient.address }}</textarea>
             </div>
 
-            <!-- Blood Group -->
+            <!-- Medical Info Section -->
+            <h5 class="mb-3 mt-4">Medical Information</h5>
             <div class="mb-3">
                 <label class="form-label">Blood Group</label>
                 <input type="text" name="blood_group" value="{{ patient.blood_group }}" class="form-control">
             </div>
-
-            <!-- Allergies -->
             <div class="mb-3">
                 <label class="form-label">Allergies</label>
                 <input type="text" name="allergies" value="{{ patient.allergies }}" class="form-control">
             </div>
-
-            <!-- Emergency Contact -->
             <div class="mb-3">
                 <label class="form-label">Emergency Contact</label>
                 <input type="text" name="emergency_contact" value="{{ patient.emergency_contact_number }}" class="form-control">
             </div>
-
-            <!-- Assigned Doctor -->
             <div class="mb-3">
                 <label class="form-label">Assigned Doctor</label>
                 <select name="doctor_assigned" class="form-select">
                     <option value="">-- Select Doctor --</option>
                     {% for doctor in doctors %}
-                        <option value="{{ doctor.id }}" {% if patient.doctor_assigned and doctor.id == patient.doctor_assigned.id %}selected{% endif %}>{{ doctor.user.username }}</option>
+                        <option value="{{ doctor.id }}" {% if patient.doctor_assigned and doctor.id == patient.doctor_assigned.id %}selected{% endif %}>{{ doctor.user.get_full_name }}</option>
                     {% endfor %}
                 </select>
             </div>
-
-            <!-- Status -->
             <div class="mb-3">
                 <label class="form-label">Status</label>
                 <input type="text" name="status" value="{{ patient.status }}" class="form-control">
             </div>
 
-            <button type="submit" class="btn btn-success mt-3">Update Profile</button>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success mt-3">Update Profile</button>
+            </div>
         </form>
     </div>
 </div>

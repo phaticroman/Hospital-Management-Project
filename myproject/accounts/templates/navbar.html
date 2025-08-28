@@ -1,9 +1,13 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
   <div class="container-fluid">
-    <!-- Company Name -->
-    <a class="navbar-brand fw-bold" href="{% url 'homePage' %}">Ruby Evolution</a>
 
-    <!-- Toggler for mobile view -->
+    <!-- Logo / Hospital Name -->
+    <a class="navbar-brand fw-bold text-primary" href="{% url 'homePage' %}">
+      {% comment %} <img src="static/images/hospital_logo.png" alt="Hospital Logo" width="40" height="40" class="d-inline-block align-text-top me-2"> {% endcomment %}
+      Ruby Evolution Hospital
+    </a>
+
+    <!-- Toggler for mobile -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
       aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -11,42 +15,59 @@
 
     <!-- Navbar Content -->
     <div class="collapse navbar-collapse" id="navbarContent">
-      
-      <!-- Search Bar (centered) -->
+
+      <!-- Center Search Bar -->
       <form class="d-flex mx-auto" role="search" method="GET" action="{% url 'doctorList' %}">
-        <input class="form-control me-2" type="search" name="q" placeholder="Search doctors..." aria-label="Search">
-        <button class="btn btn-outline-light" type="submit">Search</button>
+        <input class="form-control me-2 rounded-pill" type="search" name="q" placeholder="🔍 Search doctors..." aria-label="Search">
+        <button class="btn btn-primary rounded-pill" type="submit">Search</button>
       </form>
 
-      <!-- Links / Dropdown -->
-      <ul class="navbar-nav ms-auto">
+      <!-- Right Side Menu -->
+      <ul class="navbar-nav ms-auto align-items-center">
 
-        <!-- Doctors Dropdown -->
+        <!-- Doctors -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Doctors
+          <a class="nav-link dropdown-toggle text-primary fw-semibold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            👨‍⚕️ Profile
           </a>
-          <ul class="dropdown-menu dropdown-menu-end">
+          <ul class="dropdown-menu dropdown-menu-end shadow">
             <li><a class="dropdown-item" href="{% url 'doctorList' %}">All Doctors</a></li>
             {% if request.user.role == 'doctor' %}
-            <li><a class="dropdown-item" href="{% url 'doctorprofile' %}">Profile</a></li>
+            <li><a class="dropdown-item" href="{% url 'doctorprofile' %}">My Profile</a></li>
+            <li><a class="dropdown-item" href="{% url 'MyAppointments' %}">My Appointments</a></li>
             {% endif %}
             {% if request.user.role == 'patient' %}
-            <li><a class="dropdown-item" href="{% url 'createAppointment' %}">Make Appointment</a></li>
-            <li><a class="dropdown-item" href="{% url 'PatientProfileView' %}">Profile</a></li>
+            <li><a class="dropdown-item" href="{% url 'createAppointment' %}">Book Appointment</a></li>
+            <li><a class="dropdown-item" href="{% url 'PatientProfileView' %}">My Profile</a></li>
+            <li><a class="dropdown-item" href="{% url 'MyAppointments' %}">My Appointments</a></li>
             {% endif %}
-            
-
-            <li><a class="dropdown-item" href="{% url 'MyAppointments' %}">My Appointment</a></li>
+            {% if request.user.role == 'staff' %}
+            <li><a class="dropdown-item" href="{% url 'StaffProfileView' %}">My Profile</a></li>
+            {% endif %}
           </ul>
         </li>
 
+        <!-- Services -->
+        {% if request.user.role == 'staff' %}
+        <li class="nav-item">
+          <a class="nav-link text-primary fw-semibold" href="{% url "AppointmentListView" %}">🏥 Bills</a>
+        </li>
+        {% endif %}
+        <!-- About -->
+        <li class="nav-item">
+          <a class="nav-link text-primary fw-semibold" href="#">ℹ️ About Us</a>
+        </li>
+
+        <!-- Contact -->
+        <li class="nav-item">
+          <a class="nav-link text-primary fw-semibold" href="#">📞 Contact</a>
+        </li>
+
         <!-- Logout -->
-        <li class="nav-item ms-2">
-          <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
+        <li class="nav-item ms-3">
+          <a class="btn btn-outline-danger rounded-pill px-3" href="{% url 'logout' %}">Logout</a>
         </li>
       </ul>
-
     </div>
   </div>
 </nav>

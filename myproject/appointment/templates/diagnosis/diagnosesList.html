@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">🩺 Diagnosis History</h2>
+
+    {% if diagnoses %}
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Diagnosis</th>
+                        <th>Follow-up</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for diagnosis in diagnoses %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ diagnosis.doctor.user.get_full_name|default:"N/A" }}</td>
+                        <td>{{ diagnosis.appointment.appointment_date|date:"Y-m-d" }}</td>
+                        <td>{{ diagnosis.appointment.notes|truncatechars:40|default:"-" }}</td>
+                        <td>
+                            {% if diagnosis.follow_up_date %}
+                                {{ diagnosis.follow_up_date|date:"Y-m-d" }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'DiagnosisDetail' diagnosis.id %}" 
+                               class="btn btn-sm btn-primary">
+                                🔍 View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center">
+            No diagnosis records found for this patient.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
