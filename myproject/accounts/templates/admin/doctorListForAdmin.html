@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Doctor List (Admin View)</h2>
+
+    <table class="table table-bordered table-striped text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Profile</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Specialization</th>
+                <th>Qualification</th>
+                <th>Experience</th>
+                <th>Consultation Fee</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doctor in doctors %}
+            <tr>
+                <td>
+                    {% if doctor.doctor.profile_picture %}
+                        <img src="{{ doctor.doctor.profile_picture.url }}" alt="Profile" width="50" height="50" class="rounded-circle">
+                    {% else %}
+                        <img src="{% static 'images/default_doctor.jpg' %}" alt="Profile" width="50" height="50" class="rounded-circle">
+                    {% endif %}
+                </td>
+                <td>{{ doctor.first_name }} {{ doctor.last_name }}</td>
+                <td>{{ doctor.email }}</td>
+                <td>{{ doctor.doctor.department }}</td>
+                <td>{{ doctor.doctor.specialization }}</td>
+                <td>{{ doctor.doctor.qualification }}</td>
+                <td>{{ doctor.doctor.experience }} years</td>
+                <td>{{ doctor.doctor.consultation_fee }}</td>
+                <td>
+                    <span class="badge 
+                        {% if doctor.current_status == 'apporved' %} bg-success
+                        {% elif doctor.current_status == 'panding' %} bg-warning
+                        {% else %} bg-danger {% endif %}">
+                        {{ doctor.current_status }}
+                    </span>
+                </td>
+                <td>
+                    {% if doctor.current_status == 'panding' %}
+                    <a href="{% url 'UpdateUserStatusView' doctor.id 'apporved' %}" class="btn btn-sm btn-success">Approve</a>
+                    <a href="{% url 'UpdateUserStatusView' doctor.id 'cancel' %}" class="btn btn-sm btn-danger">Cancel</a>
+                    {% endif %}
+                    <a href="{% url 'deleteUser' doctor.id %}" class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('Are you sure you want to delete this doctor?');">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="10" class="text-center">No doctors found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -29,10 +29,9 @@
                     <p><strong>Allergies:</strong> {{ profile.allergies|default:"N/A" }}</p>
                     <p><strong>Address:</strong> {{ profile.address|default:"N/A" }}</p>
                     <p><strong>Emergency Contact:</strong> {{ profile.emergency_contact_number|default:"N/A" }}</p>
-                    <p><strong>Doctor Assigned:</strong> {{ profile.doctor_assigned.user.get_full_name|default:"N/A" }}</p>
                     <p><strong>Status:</strong> {{ profile.status }}</p>
 
-                    <a href="{% url 'patientUpdateView' request.user.patientprofile.pk %}" class="btn btn-primary mt-3">✏️ Edit Profile</a>
+                    <a href="{% url 'patientUpdateView' %}" class="btn btn-primary mt-3">✏️ Edit Profile</a>
                 </div>
             </div>
         </div>

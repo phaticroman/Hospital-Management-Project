@@ -59,7 +59,9 @@
         </div>
 
         <div class="text-center">
+            {% if request.user.role != 'admin' %}
             <a href="{% url 'AppointmentListView' %}" class="btn btn-secondary">⬅ Back to Appointments</a>
+            {% endif %}
         </div>
     </div>
 </div>

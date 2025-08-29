@@ -11,21 +11,21 @@
             <div class="card shadow-sm p-3 rounded-3 bg-light">
                 <h5>Total Doctors</h5>
                 <h3>{{ total_doctors }}</h3>
-                <a href="#" class="btn btn-sm btn-primary mt-2">Manage</a>
+                <a href="{% url "doctorListForAdmin" %}" class="btn btn-sm btn-primary mt-2">Manage</a>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card shadow-sm p-3 rounded-3 bg-light">
                 <h5>Total Patients</h5>
                 <h3>{{ total_patients }}</h3>
-                <a href="#" class="btn btn-sm btn-primary mt-2">Manage</a>
+                <a href="{% url "patientListForAdmin" %}" class="btn btn-sm btn-primary mt-2">Manage</a>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card shadow-sm p-3 rounded-3 bg-light">
                 <h5>Total Staff</h5>
                 <h3>{{ total_staff }}</h3>
-                <a href="#" class="btn btn-sm btn-primary mt-2">Manage</a>
+                <a href="{% url "staffListForAdmin" %}" class="btn btn-sm btn-primary mt-2">Manage</a>
             </div>
         </div>
         <div class="col-md-3">
@@ -55,16 +55,16 @@
                     <tbody>
                         {% for user in panding_users %}
                         <tr>
-                            <td>{{ user.username }}</td>
+                            <td><a href="{% url "doctorDetail" user.doctor.id %}">{{ user.username }}</a></td>
                             <td>{{ user.email }}</td>
                             <td>{{ user.role }}</td>
                             <td>
                                 <span class="badge bg-warning">{{ user.current_status }}</span>
                             </td>
                             <td>
-                                <a href="{% url 'UpdateAppointmentStatusView' user.id 'apporved' %}" 
+                                <a href="{% url 'UpdateUserStatusView' user.id 'apporved' %}" 
                                    class="btn btn-success btn-sm">Approve</a>
-                                <a href="{% url 'UpdateAppointmentStatusView' user.id 'cancel' %}" 
+                                <a href="{% url 'UpdateUserStatusView' user.id 'cancel' %}" 
                                    class="btn btn-danger btn-sm">Cancel</a>
                             </td>
                         </tr>
@@ -147,7 +147,7 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <a href="#" class="btn btn-outline-primary btn-sm">View All</a>
+                <a href="{% url "billListForAdmin" %}" class="btn btn-outline-primary btn-sm">View All</a>
             </div>
         </div>
     </div>

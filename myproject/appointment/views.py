@@ -16,10 +16,13 @@ class MakeAppointmentView(LoginRequiredMixin,View):
         if request.user.role == 'doctor':
             return redirect('homePage')
         patient = get_object_or_404(PatientProfile, user=request.user)
-        doctors = DoctorProfile.objects.filter(availability_status=True,user__current_status='apporved')
+        doctors = DoctorProfile.objects.filter(availability_status=True,user__current_status='apporved').order_by('user__first_name', 'user__last_name')
         return render(request, 'consultation/makeAppointment.html', {'doctors': doctors})
 
     def post(self, request):
+        if request.user.role != 'patient':
+            messages.error('only patient can make appointment')
+            return redirect('homePage')
         patient = get_object_or_404(PatientProfile, user=request.user)
         doctor_id = request.POST.get('doctor')
         appointment_date = request.POST.get('appointment_date')
@@ -81,7 +84,7 @@ class patientNoteDetail(DetailView):
     context_object_name = 'patient'
     
 
-class PatientDiagnosisCreateView(View):
+class PatientDiagnosisCreateView(LoginRequiredMixin,View):
     def get(self, request, appointment_id):
         if request.user.role != "doctor":
             messages.error(request, "❌ Only doctors can add diagnosis.")
@@ -127,21 +130,21 @@ class PatientDiagnosisCreateView(View):
         messages.success(request, "✅ Diagnosis record saved successfully.")
         return redirect("MyAppointments")
 
-class DiagnosisDetail(DetailView):
+class DiagnosisDetail(LoginRequiredMixin,DetailView):
     model = PatientDiagnosis
     template_name='diagnosis/diagnosisDetails.html'
     context_object_name = 'diagnosis'
     
 
 
-class PatientDiagnosisListView(View):
+class PatientDiagnosisListView(LoginRequiredMixin,View):
     def get(self, request,patient_id):
         patient = get_object_or_404(PatientProfile,id=patient_id)
         diagnoses = PatientDiagnosis.objects.filter(appointment__patient=patient)
         return render(request,'diagnosis/diagnosesList.html',{'diagnoses':diagnoses})
     
     
-class MakeBill(View):
+class MakeBill(LoginRequiredMixin,View):
     def get(self, request, *args, **kwargs):
         appointment_id  = request.GET.get("appointment_id")
         if not appointment_id:
@@ -203,6 +206,6 @@ class AppointmentListView(LoginRequiredMixin, View):
         return render(request, 'bills/appointmentList.html', context)
     
     
-class BillsDetail(DetailView):
+class BillsDetail(LoginRequiredMixin,DetailView):
     model = Billing
     template_name='bills/billDetails.html'

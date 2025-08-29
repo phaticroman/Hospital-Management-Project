@@ -18,6 +18,10 @@ class CustomUser(AbstractUser):
     last_name = models.CharField(max_length=50,null=True)
     role = models.CharField(choices=ROLE_CHOICES, max_length=50,null=True, blank=True)
     current_status = models.CharField(choices=CURRENT_STATUS, max_length=50,default='panding')
+    def save(self, *args, **kwargs):
+        if self.role == 'patient':
+            self.current_status = 'apporved'
+        super().save(*args, **kwargs)
     
 class DoctorProfile(models.Model):
     DEPARTMENT_CHOICES = [
@@ -30,7 +34,7 @@ class DoctorProfile(models.Model):
         ('Gynecology', 'Gynecology'),
     ]
     
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE,related_name='doctor')
     profile_picture = models.ImageField(upload_to='doctor_profiles/', null=True, blank=True)
     contact_number = models.CharField(max_length=15, null=True, blank=True)
     department = models.CharField(max_length=50, choices=DEPARTMENT_CHOICES, default='General')
@@ -68,7 +72,7 @@ class PatientProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='patient_profiles/', null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, null=True, blank=True)
     contact_number = models.CharField(max_length=15, null=True, blank=True)
     address = models.TextField(null=True, blank=True)
 
@@ -77,7 +81,7 @@ class PatientProfile(models.Model):
 
     emergency_contact_number = models.CharField(max_length=15, null=True, blank=True)
 
-    doctor_assigned = models.ForeignKey('DoctorProfile', on_delete=models.SET_NULL, null=True, blank=True)
+    
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Outpatient')
 
     def __str__(self):
@@ -88,7 +92,7 @@ class PatientProfile(models.Model):
 class StaffProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='Staff_profiles/', null=True, blank=True)
-    role = models.CharField(max_length=50)
+    role = models.CharField(max_length=50, null=True, blank=True)
     joinDate = models.DateField(auto_now_add=True)
     contactNumber = models.CharField(max_length=15, null=True, blank=True)
     address = models.TextField(null=True, blank=True)

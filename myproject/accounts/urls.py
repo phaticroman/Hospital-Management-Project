@@ -9,6 +9,7 @@ urlpatterns = [
     path('loginPage/',CustomLogin.as_view(),name='loginPage'),
     path('signup/',SignUpView.as_view(),name='signupPage'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
+    path('deleteUser/<int:pk>', deleteUser, name='deleteUser'),
     
     
     path('doctors/', DoctorListView.as_view(), name='doctorList'),
@@ -19,13 +20,18 @@ urlpatterns = [
     
     path('patientDetails/<int:pk>/', PatientDetailView.as_view(), name='patientDetail'),
     path('PatientProfileView/', PatientProfileView.as_view(), name='PatientProfileView'),
-    path('patientDetail/<int:pk>/update/', PatientUpdateView.as_view(), name='patientUpdateView'),
+    path('patientDetail/update/', PatientUpdateView.as_view(), name='patientUpdateView'),
     
     path('StaffUpdateView/<int:pk>/', StaffUpdateView.as_view(), name='StaffUpdateView'),
     path('StaffProfileView/', StaffProfileView.as_view(), name='StaffProfileView'),
     
     
     path('adminDashboard/', adminDashboard.as_view(), name='adminDashboard'),
-    path('UpdateAppointmentStatusView/<int:pk>/status/<str:current_status>/', UpdateAppointmentStatusView.as_view(), name='UpdateAppointmentStatusView'),
+    path('UpdateUserStatusView/<int:pk>/status/<str:current_status>/', UpdateUserStatusView.as_view(), name='UpdateUserStatusView'),
+    
+    path('doctorListForAdmin', doctorListForAdmin, name='doctorListForAdmin'),
+    path('patientListForAdmin', patientListForAdmin, name='patientListForAdmin'),
+    path('staffListForAdmin', staffListForAdmin, name='staffListForAdmin'),
+    path('billListForAdmin', billListForAdmin, name='billListForAdmin'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

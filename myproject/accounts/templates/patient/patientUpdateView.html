@@ -24,52 +24,63 @@
                 <input type="file" name="profile_picture" class="form-control mt-2">
             </div>
 
-            <!-- Personal Info Section -->
+            <!-- Personal Information -->
             <h5 class="mb-3">Personal Information</h5>
+
             <div class="mb-3">
                 <label class="form-label">Gender</label>
-                <select name="gender" class="form-select">
-                    <option value="Male" {% if patient.gender == 'Male' %}selected{% endif %}>Male</option>
-                    <option value="Female" {% if patient.gender == 'Female' %}selected{% endif %}>Female</option>
-                    <option value="Other" {% if patient.gender == 'Other' %}selected{% endif %}>Other</option>
+                <select name="gender" class="form-select" required>
+                    <option value="" disabled {% if not patient.gender %}selected{% endif %}>Select Gender</option>
+                    <option value="Male" {% if patient.gender == "Male" %}selected{% endif %}>Male</option>
+                    <option value="Female" {% if patient.gender == "Female" %}selected{% endif %}>Female</option>
+                    <option value="Other" {% if patient.gender == "Other" %}selected{% endif %}>Other</option>
                 </select>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Date of Birth</label>
-                <input type="date" name="date_of_birth" value="{{ patient.date_of_birth }}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Contact Number</label>
-                <input type="text" name="contact_number" value="{{ patient.contact_number }}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Address</label>
-                <textarea name="address" class="form-control" rows="2">{{ patient.address }}</textarea>
             </div>
 
-            <!-- Medical Info Section -->
+            <div class="mb-3">
+    <label class="form-label">Date of Birth</label>
+    <input type="date" name="date_of_birth" value="{{ patient.date_of_birth|date:'Y-m-d' }}" class="form-control" required>
+</div>
+
+
+            <div class="mb-3">
+                <label class="form-label">Contact Number</label>
+                <input type="text" name="contact_number" value="{{ patient.contact_number }}" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Address</label>
+                <textarea name="address" class="form-control" rows="2" required>{{ patient.address }}</textarea>
+            </div>
+
+            <!-- Medical Information -->
             <h5 class="mb-3 mt-4">Medical Information</h5>
+
             <div class="mb-3">
                 <label class="form-label">Blood Group</label>
-                <input type="text" name="blood_group" value="{{ patient.blood_group }}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Allergies</label>
-                <input type="text" name="allergies" value="{{ patient.allergies }}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Emergency Contact</label>
-                <input type="text" name="emergency_contact" value="{{ patient.emergency_contact_number }}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Assigned Doctor</label>
-                <select name="doctor_assigned" class="form-select">
-                    <option value="">-- Select Doctor --</option>
-                    {% for doctor in doctors %}
-                        <option value="{{ doctor.id }}" {% if patient.doctor_assigned and doctor.id == patient.doctor_assigned.id %}selected{% endif %}>{{ doctor.user.get_full_name }}</option>
-                    {% endfor %}
+                <select name="blood_group" class="form-select" required>
+                    <option value="" disabled {% if not patient.blood_group %}selected{% endif %}>Select Blood Group</option>
+                    <option value="A+" {% if patient.blood_group == "A+" %}selected{% endif %}>A+</option>
+                    <option value="A-" {% if patient.blood_group == "A-" %}selected{% endif %}>A-</option>
+                    <option value="B+" {% if patient.blood_group == "B+" %}selected{% endif %}>B+</option>
+                    <option value="B-" {% if patient.blood_group == "B-" %}selected{% endif %}>B-</option>
+                    <option value="O+" {% if patient.blood_group == "O+" %}selected{% endif %}>O+</option>
+                    <option value="O-" {% if patient.blood_group == "O-" %}selected{% endif %}>O-</option>
+                    <option value="AB+" {% if patient.blood_group == "AB+" %}selected{% endif %}>AB+</option>
+                    <option value="AB-" {% if patient.blood_group == "AB-" %}selected{% endif %}>AB-</option>
                 </select>
             </div>
+
+            <div class="mb-3">
+                <label class="form-label">Allergies</label>
+                <input type="text" name="allergies" value="{{ patient.allergies }}" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Emergency Contact</label>
+                <input type="text" name="emergency_contact" value="{{ patient.emergency_contact_number }}" class="form-control" required>
+            </div>
+
             <div class="mb-3">
                 <label class="form-label">Status</label>
                 <input type="text" name="status" value="{{ patient.status }}" class="form-control">

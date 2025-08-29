@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Billing List (Admin View)</h2>
+
+    <table class="table table-bordered table-striped text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Bill ID</th>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Appointment</th>
+                <th>Bill Date</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bill in bills %}
+            <tr>
+                <td>{{ bill.id }}</td>
+                <td>{{ bill.appointment.patient.user.first_name }} {{ bill.appointment.patient.user.last_name }}</td>
+                <td>Dr. {{ bill.appointment.doctor.user.first_name }} {{ bill.appointment.doctor.user.last_name }}</td>
+                <td>#{{ bill.appointment.id }}</td>
+                <td>{{ bill.billDate|date:"Y-m-d H:i" }}</td>
+                <td>{{ bill.totalAmount }}</td>
+                <td>
+                    <span class="badge 
+                        {% if bill.status == 'Paid' %} bg-success
+                        {% elif bill.status == 'Unpaid' %} bg-danger
+                        {% else %} bg-warning {% endif %}">
+                        {{ bill.paymentStatus }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{% url 'BillsDetail' bill.id %}" class="btn btn-sm btn-primary">View</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center">No bills found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

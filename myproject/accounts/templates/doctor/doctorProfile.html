@@ -9,10 +9,19 @@
         {% endfor %}
     {% endif %}
     {% if request.user.current_status == 'panding' %}
-    
     <h2 class="text-center mb-4">Your Profile is Panding</h2>
+    {% elif request.user.current_status == 'cancel' %}
+    <h2 class="text-center mb-4">We are sorry! Your Application canceled</h2>
+    {% if request.user.role == 'admin' or request.user == user %}
+    <form method="POST" action="{% url 'deleteUser' user.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger"
+                onclick="return confirm('Are you sure you want to delete this account?');">
+            Delete Account
+        </button>
+    </form>
+{% endif %}   
     {% else %}
-    
     <div class="card shadow-sm mb-4" style="max-width: 750px; margin:auto;">
         <div class="row g-0 p-3">
             <!-- Left Column: Profile Picture & Basic Info -->
